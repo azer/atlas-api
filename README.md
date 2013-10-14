@@ -1,6 +1,6 @@
 ## atlas-api
 
-Unofficial Atlas Magazine API.
+Unofficial Atlas Magazine API running at [atlas.api.anakaynak.com](http://atlas.api.anakaynak.com/)
 
 Example Requests:
 
