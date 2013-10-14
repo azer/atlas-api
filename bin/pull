@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+
+require('default-debug')('atlas-api:*');
+
+var debug = require("local-debug")('pull');
+var io = require("level-json")('./db');
+var opt = require('optimist');
+var iter = require("iter");
+var fs = require('fs');
+var slugify = require('slugify');
+var pull = require("../lib/pull");
+
+var argv = opt
+      .options('cities', { alias: 'c' })
+      .options('sets', { alias: 's' })
+      .options('pages', { alias: 'n' })
+      .argv;
+
+argv.sets && saveAllSets();
+argv.cities && saveAllCities();
+
+function saveSet (record, callback) {
+  io(record.link, function (error, result) {
+    if (!error) {
+      debug('%s is already pulled. Skipping', record.link);
+      return callback();
+    }
+
+    pull.set(record.source, function (error, result) {
+      if(error) return callback(error);
+
+      debug('Pulled %d photos from %s, saving as %s', result.photos.length, record.source, record.link);
+
+      io.set(record.link, result, callback);
+    });
+
+  });
+}
+
+function saveSets (list, callback) {
+  iter(list.length)
+    .done(callback)
+    .run(function (next, i) {
+      saveSet(list[i], next);
+    });
+}
+
+function saveAllSets () {
+  var n = argv.pages || 13;
+  var result;
+  var all = [];
+
+  iter(n)
+  .done(function () {
+    debug('Pulled %d sets', all.length);
+    io('index', all, function () {
+      debug('Saved!');
+    });
+  })
+  .run(function (next, i) {
+    pull.sets(i + 1, function (error, result) {
+      if(error) throw error;
+      all.push.apply(all, result);
+      saveSets(result, next);
+    });
+  });
+}
+
+function save (target, obj) {
+  debug('Saving to %s', target);
+  fs.writeFileSync(target, JSON.stringify(obj, null, '  '));
+}
+
+function saveAllCities () {
+  pull.city(2, function (error, result) {
+    console.log(error, result);
+  });
+}

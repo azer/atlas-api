@@ -1,0 +1,41 @@
+{
+  "name": "atlas-api",
+  "version": "0.0.0",
+  "description": "Unofficial Atlas Magazine API",
+  "main": "index.js",
+  "bin": {
+    "atlas-api": "./bin/atlas-api",
+    "atlas-pull": "./bin/pull"
+  },
+  "scripts": {
+    "test": "fox"
+  },
+  "dependencies": {
+    "json-resources": "*",
+    "optimist": "~0.6.0",
+    "show-version": "0.0.0",
+    "show-help": "0.0.0",
+    "iter": "0.0.0",
+    "local-debug": "0.0.0",
+    "default-debug": "0.0.0",
+    "scrape-url": "0.0.1",
+    "strip": "0.0.5",
+    "slugify": "~0.1.0",
+    "level-json": "0.0.2",
+    "memoize-async": "0.0.0"
+  },
+  "devDependencies": {
+    "fox": "*"
+  },
+  "keywords": [
+    "atlas",
+    "magazine",
+    "photography"
+  ],
+  "repository": {
+    "url": "git@github.com:azer/atlas-api.git",
+    "type": "git"
+  },
+  "author": "Azer Koçulu <azer@kodfabrik.com>",
+  "license": "BSD"
+}
